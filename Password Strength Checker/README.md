@@ -1,0 +1,1 @@
+# This Project helps you to understand the basic of javaScript

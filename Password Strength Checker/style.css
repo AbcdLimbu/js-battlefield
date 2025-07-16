@@ -1,0 +1,55 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.container{
+    max-width: 500px;
+    width: 80%;
+    box-shadow: 0 2px 12px rgb(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.container h1{
+    font-size: 1.3rem;
+}
+
+#password{
+    margin: 8px;
+    padding: 4px;
+    font-size: 0.8rem;
+}
+
+#strength-message {
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.weak {
+  color: red;
+}
+
+.medium {
+  color: orange;
+}
+
+.strong {
+  color: green;
+}
+
+@media (min-width: 500px) {
+    .container h1{
+        font-size: 1.6rem;
+    }
+}
