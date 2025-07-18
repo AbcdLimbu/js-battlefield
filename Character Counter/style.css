@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: sans-serif;
+    background-color: #e5e5e5;
+}
+
+.container{
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+h1{
+    margin-bottom: 10px;
+}
+
+textarea{
+    width: 90%;
+    max-width: 500px;
+    padding: 4px;
+}
+
+.over-limit{
+    color: red;
+}
