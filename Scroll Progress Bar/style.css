@@ -1,0 +1,26 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 70%;
+    margin: 20px auto;
+    text-align: justify;
+}
+.content p{
+    line-height: 1.6rem;
+    margin-block: 32px;
+}
+
+#progress-bar{
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 8px;
+    width: 0%;
+    transition: all 0.1s ease;
+    background-color: #242219;
+}
