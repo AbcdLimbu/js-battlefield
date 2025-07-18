@@ -1,0 +1,31 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.slider{
+    text-align: center;
+}
+
+#slider-image{
+    width:400px;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    margin-bottom: 1rem;
+}
+
+.controls button{
+    padding: 0.5rem 1rem;
+    margin: 0 2px;
+    cursor:pointer
+}
+
