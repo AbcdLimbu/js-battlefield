@@ -1,0 +1,54 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #ddd;
+}
+
+.container{
+    padding: 3rem;
+    background-color: #fff;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 2px 11px 20px gray;
+}
+
+#count{
+    font-size: 2.5rem;
+    padding: 10px;
+}
+
+.button{
+    padding: 4px 10px;
+    border:none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#increase{
+    background-color: rgb(41, 230, 41);
+}
+#increase:hover{
+    background-color: rgb(35, 207, 35);
+}
+#decrease{
+    background-color: rgb(130, 130, 255);
+}
+#decrease:hover{
+    background-color: rgb(119, 119, 232);
+}
+#reset{
+    background: #c5c5c5;
+}
+#reset:hover{
+    background: #b4b4b4;
+}
