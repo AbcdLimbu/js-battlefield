@@ -4,138 +4,168 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Base Converter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1e1e2f;
-      color: #f0f0f0;
-      padding: 2rem;
-      text-align: center;
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-    h1 {
-      margin-bottom: 1rem;
+    .gradient-bg {
+      background: linear-gradient(45deg, #1e1e2f, #2a2a4a, #1e1e2f, #3a2a4a);
+      background-size: 400%;
+      animation: gradient 15s ease infinite;
     }
-    input, select, button {
-      padding: 0.6rem;
-      margin: 0.5rem;
-      border-radius: 5px;
-      border: none;
-      font-size: 1rem;
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    input, select {
-      width: 200px;
-    }
-    button {
-      background-color: #4caf50;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    #result {
-      margin-top: 2rem;
-      font-size: 1.2rem;
-      color: #00ffcc;
+    .glow {
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
     }
     .error {
       color: #ff5555;
+      animation: shake 0.3s ease-in-out;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
   </style>
 </head>
-<body>
-
-  <h1>Base Converter</h1>
-
-  <input type="text" id="inputNumber" placeholder="Enter number" />
-  <input type="number" id="fromBase" placeholder="From base (2-36)" min="2" max="36"/>
-  <select id="toBase">
-    <!-- Populated via JS -->
-  </select>
-  <br />
-  <button onclick="convertBase()">Convert</button>
-
-  <div id="result"></div>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+  <div class="glass rounded-2xl p-8 max-w-md w-full">
+    <h1 class="text-3xl font-bold text-white mb-6 text-center">Base Converter</h1>
+    
+    <div class="space-y-4">
+      <input 
+        type="text" 
+        id="inputNumber" 
+        placeholder="Enter number" 
+        required
+        class="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+      />
+      
+      <div class="flex space-x-4">
+        <div class="flex-1">
+          <label for="fromBase" class="block text-sm text-gray-300 mb-1">From Base</label>
+          <select 
+            id="fromBase" 
+            class="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+          >
+            <!-- Options will be populated by JavaScript -->
+          </select>
+        </div>
+        
+        <div class="flex-1">
+          <label for="toBase" class="block text-sm text-gray-300 mb-1">To Base</label>
+          <select 
+            id="toBase" 
+            class="w-full p-3 bg-gray-800 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+          >
+            <!-- Options will be populated by JavaScript -->
+          </select>
+        </div>
+      </div>
+      
+      <button 
+        onclick="convertBase()" 
+        class="w-full p-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 glow transition-all duration-300"
+      >
+        Convert
+      </button>
+      
+      <div id="result" class="mt-6 text-lg text-cyan-300"></div>
+    </div>
+  </div>
 
   <script>
-  const toBaseSelect = document.getElementById('toBase');
-  for (let i = 2; i <= 36; i++) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.text = `Base ${i}`;
-    toBaseSelect.appendChild(option);
-  }
-
-  function convertBase() {
-    const input = document.getElementById('inputNumber').value.trim();
-    const fromBase = parseInt(document.getElementById('fromBase').value);
-    const toBase = parseInt(document.getElementById('toBase').value);
-    const resultDiv = document.getElementById('result');
-
-    try {
-      if (!input || isNaN(fromBase) || isNaN(toBase)) {
-        throw new Error("Please fill in all fields.");
-      }
-      if (fromBase < 2 || fromBase > 36 || toBase < 2 || toBase > 36) {
-        throw new Error("Bases must be between 2 and 36.");
-      }
-
-      const converted = convertFullNumber(input, fromBase, toBase);
-      resultDiv.innerHTML = `Converted value (base ${toBase}): <strong>${converted}</strong>`;
-      resultDiv.className = '';
-    } catch (err) {
-      resultDiv.textContent = err.message;
-      resultDiv.className = 'error';
-    }
-  }
-
-  function convertFullNumber(input, fromBase, toBase) {
-    let isNegative = input.startsWith("-");
-    let [intPart, fracPart] = input.replace("-", "").split(".");
-
-    // Convert integer part to decimal
-    let intDecimal = parseInt(intPart, fromBase);
-    if (isNaN(intDecimal)) throw new Error(`Invalid integer part in base ${fromBase}.`);
-
-    // Convert fractional part to decimal
-    let fracDecimal = 0;
-    if (fracPart) {
-      for (let i = 0; i < fracPart.length; i++) {
-        const digit = parseInt(fracPart[i], fromBase);
-        if (isNaN(digit)) throw new Error(`Invalid fractional digit '${fracPart[i]}' in base ${fromBase}.`);
-        fracDecimal += digit / Math.pow(fromBase, i + 1);
-      }
-    }
-
-    const totalDecimal = intDecimal + fracDecimal;
-    const finalDecimal = isNegative ? -totalDecimal : totalDecimal;
-
-    return convertDecimalToBase(finalDecimal, toBase);
-  }
-
-  function convertDecimalToBase(num, base) {
-    const isNegative = num < 0;
-    num = Math.abs(num);
+    const fromBaseSelect = document.getElementById('fromBase');
+    const toBaseSelect = document.getElementById('toBase');
     
-    const intPart = Math.floor(num);
-    let fracPart = num - intPart;
-
-    const intStr = intPart.toString(base).toUpperCase();
-
-    // Convert fractional part manually
-    let fracStr = "";
-    let precision = 10; // max digits after decimal
-    while (fracPart > 0 && fracStr.length < precision) {
-      fracPart *= base;
-      let digit = Math.floor(fracPart);
-      fracStr += digit.toString(base).toUpperCase();
-      fracPart -= digit;
+    // Populate both select elements with base options (2-36)
+    for (let i = 2; i <= 36; i++) {
+      const fromOption = document.createElement('option');
+      fromOption.value = i;
+      fromOption.text = `Base ${i}`;
+      fromBaseSelect.appendChild(fromOption);
+      
+      const toOption = document.createElement('option');
+      toOption.value = i;
+      toOption.text = `Base ${i}`;
+      toBaseSelect.appendChild(toOption);
     }
 
-    return (isNegative ? "-" : "") + intStr + (fracStr ? "." + fracStr : "");
-  }
-</script>
+    function convertBase() {
+      const input = document.getElementById('inputNumber').value.trim();
+      const fromBase = parseInt(document.getElementById('fromBase').value);
+      const toBase = parseInt(document.getElementById('toBase').value);
+      const resultDiv = document.getElementById('result');
 
+      try {
+        if (!input || isNaN(fromBase) || isNaN(toBase)) {
+          throw new Error("Please fill in all fields.");
+        }
+        if (fromBase < 2 || fromBase > 36 || toBase < 2 || toBase > 36) {
+          throw new Error("Bases must be between 2 and 36.");
+        }
 
+        const converted = convertFullNumber(input, fromBase, toBase);
+        resultDiv.innerHTML = `Converted value (base ${toBase}): <strong>${converted}</strong>`;
+        resultDiv.className = 'mt-6 text-lg text-cyan-300';
+      } catch (err) {
+        resultDiv.textContent = err.message;
+        resultDiv.className = 'mt-6 text-lg error';
+      }
+    }
+
+    function convertFullNumber(input, fromBase, toBase) {
+      let isNegative = input.startsWith("-");
+      let [intPart, fracPart] = input.replace("-", "").split(".");
+
+      // Convert integer part to decimal
+      let intDecimal = parseInt(intPart, fromBase);
+      if (isNaN(intDecimal)) throw new Error(`Invalid integer part in base ${fromBase}.`);
+
+      // Convert fractional part to decimal
+      let fracDecimal = 0;
+      if (fracPart) {
+        for (let i = 0; i < fracPart.length; i++) {
+          const digit = parseInt(fracPart[i], fromBase);
+          if (isNaN(digit)) throw new Error(`Invalid fractional digit '${fracPart[i]}' in base ${fromBase}.`);
+          fracDecimal += digit / Math.pow(fromBase, i + 1);
+        }
+      }
+
+      const totalDecimal = intDecimal + fracDecimal;
+      const finalDecimal = isNegative ? -totalDecimal : totalDecimal;
+
+      return convertDecimalToBase(finalDecimal, toBase);
+    }
+
+    function convertDecimalToBase(num, base) {
+      const isNegative = num < 0;
+      num = Math.abs(num);
+      
+      const intPart = Math.floor(num);
+      let fracPart = num - intPart;
+
+      const intStr = intPart.toString(base).toUpperCase();
+
+      // Convert fractional part manually
+      let fracStr = "";
+      let precision = 10; // max digits after decimal
+      while (fracPart > 0 && fracStr.length < precision) {
+        fracPart *= base;
+        let digit = Math.floor(fracPart);
+        fracStr += digit.toString(base).toUpperCase();
+        fracPart -= digit;
+      }
+
+      return (isNegative ? "-" : "") + intStr + (fracStr ? "." + fracStr : "");
+    }
+  </script>
 </body>
 </html>
